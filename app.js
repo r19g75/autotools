@@ -201,9 +201,9 @@ document.addEventListener('touchmove', e => {
 // pokaż / ukryj pole stożka
 function toggleCone() {
     const shape = document.getElementById('tankShape').value;
+    // pokaż / ukryj pole stożka
     document.getElementById('coneH').style.display = (shape === 'cylcone') ? 'block' : 'none';
 }
-
 // główny licznik
 function calcTank() {
     const D     = parseFloat(document.getElementById('tankD').value)  || 0;  // cm
@@ -233,3 +233,4 @@ function calcTank() {
          Cylinder: ${(Vcyl/1000).toFixed(2)} l` +
         (Vcone ? `<br>Stożek: ${(Vcone/1000).toFixed(2)} l` : '');
 }
+
