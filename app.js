@@ -23,9 +23,16 @@ function switchTab(tabName) {
 function convertPressure() {
     const bar = parseFloat(document.getElementById('barInput').value) || 0;
     
-    document.getElementById('paResult').textContent = (bar * 100000).toFixed(0);
-    document.getElementById('psiResult').textContent = (bar * 14.5038).toFixed(2);
-    document.getElementById('mpaResult').textContent = (bar * 0.1).toFixed(3);
+    if(bar > 0) {
+        document.getElementById('paResult').textContent = (bar * 100000).toFixed(0);
+        document.getElementById('psiResult').textContent = (bar * 14.5038).toFixed(2);
+        document.getElementById('mpaResult').textContent = (bar * 0.1).toFixed(3);
+        
+        // Podświetl wyniki
+        document.getElementById('paDiv').classList.remove('empty');
+        document.getElementById('psiDiv').classList.remove('empty');
+        document.getElementById('mpaDiv').classList.remove('empty');
+    }
 }
 
 // PRZELICZNIK PRZEPŁYWU
@@ -33,29 +40,36 @@ function convertFlow() {
     const value = parseFloat(document.getElementById('flowInput').value) || 0;
     const unit = document.getElementById('flowUnit').value;
     
-    let m3h, lmin, cfm;
-    
-    switch(unit) {
-        case 'm3h':
-            m3h = value;
-            lmin = value * 16.667;
-            cfm = value * 0.5886;
-            break;
-        case 'lmin':
-            lmin = value;
-            m3h = value / 16.667;
-            cfm = value * 0.03531;
-            break;
-        case 'cfm':
-            cfm = value;
-            m3h = value / 0.5886;
-            lmin = value / 0.03531;
-            break;
+    if(value > 0) {
+        let m3h, lmin, cfm;
+        
+        switch(unit) {
+            case 'm3h':
+                m3h = value;
+                lmin = value * 16.667;
+                cfm = value * 0.5886;
+                break;
+            case 'lmin':
+                lmin = value;
+                m3h = value / 16.667;
+                cfm = value * 0.03531;
+                break;
+            case 'cfm':
+                cfm = value;
+                m3h = value / 0.5886;
+                lmin = value / 0.03531;
+                break;
+        }
+        
+        document.getElementById('m3hResult').textContent = m3h.toFixed(2);
+        document.getElementById('lminResult').textContent = lmin.toFixed(2);
+        document.getElementById('cfmResult').textContent = cfm.toFixed(2);
+        
+        // Podświetl wyniki
+        document.getElementById('m3hDiv').classList.remove('empty');
+        document.getElementById('lminDiv').classList.remove('empty');
+        document.getElementById('cfmDiv').classList.remove('empty');
     }
-    
-    document.getElementById('m3hResult').textContent = m3h.toFixed(2);
-    document.getElementById('lminResult').textContent = lmin.toFixed(2);
-    document.getElementById('cfmResult').textContent = cfm.toFixed(2);
 }
 
 // ZARZĄDZANIE MASZYNAMI
@@ -161,23 +175,27 @@ function calculateCable() {
     const voltage = parseFloat(document.getElementById('voltage').value);
     const length = parseFloat(document.getElementById('cableLength').value) || 0;
     
-    // Prąd
-    const current = voltage === 400 ? 
-        (kw * 1000) / (voltage * 1.732 * 0.85) : // 3-fazowy
-        (kw * 1000) / (voltage * 0.95); // 1-fazowy
-    
-    // Dobór przekroju (uproszczony)
-    let cable = '1.5';
-    if (current > 10) cable = '2.5';
-    if (current > 16) cable = '4';
-    if (current > 25) cable = '6';
-    if (current > 32) cable = '10';
-    if (current > 50) cable = '16';
-    
-    document.getElementById('cableResult').innerHTML = 
-        `Prąd: ${current.toFixed(1)}A<br>
-         Przekrój: ${cable} mm²<br>
-         Zabezpieczenie: ${Math.ceil(current * 1.25)}A`;
+    if(kw > 0) {
+        // Prąd
+        const current = voltage === 400 ? 
+            (kw * 1000) / (voltage * 1.732 * 0.85) : // 3-fazowy
+            (kw * 1000) / (voltage * 0.95); // 1-fazowy
+        
+        // Dobór przekroju (uproszczony)
+        let cable = '1.5';
+        if (current > 10) cable = '2.5';
+        if (current > 16) cable = '4';
+        if (current > 25) cable = '6';
+        if (current > 32) cable = '10';
+        if (current > 50) cable = '16';
+        
+        document.getElementById('cableResult').innerHTML = 
+            `Prąd: ${current.toFixed(1)}A<br>
+             Przekrój: ${cable} mm²<br>
+             Zabezpieczenie: ${Math.ceil(current * 1.25)}A`;
+        
+        document.getElementById('cableResult').classList.remove('empty');
+    }
 }
 
 // INFO O KABLACH
@@ -192,8 +210,13 @@ function showCableInfo() {
     };
     
     const selected = document.getElementById('cableType').value;
-    document.getElementById('cableInfo').textContent = 
-        selected ? cableData[selected] : '-';
+    if(selected) {
+        document.getElementById('cableInfo').textContent = cableData[selected];
+        document.getElementById('cableInfo').classList.remove('empty');
+    } else {
+        document.getElementById('cableInfo').textContent = '-';
+        document.getElementById('cableInfo').classList.add('empty');
+    }
 }
 
 // BACKUP/RESTORE
@@ -227,42 +250,38 @@ function importData(file) {
     reader.readAsText(file);
 }
 
-// Clear service worker cache na starcie
+// SERVICE WORKER
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').then(function(registration) {
         console.log('Service Worker registered');
     });
 }
 
-// Fix dla inputów na mobile
+// INICJALIZACJA
+window.onload = function() {
+    displayMachines();
+}
+
+// Enter key support dla przeliczników
 document.addEventListener('DOMContentLoaded', function() {
-    // Zapobiegaj propagacji eventów
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-        });
-        input.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.focus();
-        });
+    // Enter dla ciśnienia
+    document.getElementById('barInput')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            convertPressure();
+        }
     });
     
-    // Inicjalizacja
-    displayMachines();
-});
-
-// Zapobiegaj przypadkowemu odświeżaniu przy scrollowaniu
-let lastTouchY = 0;
-document.addEventListener('touchstart', function(e) {
-    lastTouchY = e.touches[0].clientY;
-}, {passive: true});
-
-document.addEventListener('touchmove', function(e) {
-    const touchY = e.touches[0].clientY;
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    // Enter dla przepływu
+    document.getElementById('flowInput')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            convertFlow();
+        }
+    });
     
-    if (scrollTop === 0 && touchY > lastTouchY) {
-        e.preventDefault();
-    }
-}, {passive: false});
+    // Enter dla kabli
+    document.getElementById('cableLength')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            calculateCable();
+        }
+    });
+});
