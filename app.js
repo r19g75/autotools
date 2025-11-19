@@ -10,7 +10,13 @@ function switchTab(tabName) {
     
     // Pokaż wybraną
     document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
+    
+    // Znajdź i aktywuj przycisk
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if(btn.getAttribute('onclick').includes(tabName)) {
+            btn.classList.add('active');
+        }
+    });
 }
 
 // PRZELICZNIK CIŚNIENIA
@@ -130,11 +136,23 @@ function searchMachines() {
 }
 
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text);
-    event.target.textContent = '✓';
-    setTimeout(() => {
-        event.target.textContent = '📋';
-    }, 1000);
+    navigator.clipboard.writeText(text).then(function() {
+        // Znajdź przycisk który został kliknięty
+        const btn = document.activeElement;
+        const originalText = btn.textContent;
+        btn.textContent = '✓';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 1000);
+    }).catch(function(err) {
+        // Fallback dla starszych przeglądarek
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    });
 }
 
 // KALKULATOR KABLI
@@ -209,12 +227,42 @@ function importData(file) {
     reader.readAsText(file);
 }
 
-// SERVICE WORKER
+// Clear service worker cache na starcie
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+        console.log('Service Worker registered');
+    });
 }
 
-// INICJALIZACJA
-window.onload = function() {
+// Fix dla inputów na mobile
+document.addEventListener('DOMContentLoaded', function() {
+    // Zapobiegaj propagacji eventów
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        });
+        input.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.focus();
+        });
+    });
+    
+    // Inicjalizacja
     displayMachines();
-}
+});
+
+// Zapobiegaj przypadkowemu odświeżaniu przy scrollowaniu
+let lastTouchY = 0;
+document.addEventListener('touchstart', function(e) {
+    lastTouchY = e.touches[0].clientY;
+}, {passive: true});
+
+document.addEventListener('touchmove', function(e) {
+    const touchY = e.touches[0].clientY;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    
+    if (scrollTop === 0 && touchY > lastTouchY) {
+        e.preventDefault();
+    }
+}, {passive: false});
