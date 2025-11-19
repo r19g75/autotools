@@ -61,6 +61,7 @@
             border: 1px solid #555;
             color: white;
             border-radius: 5px;
+            -webkit-appearance: none;
         }
         button {
             background: #0066cc;
@@ -122,7 +123,7 @@
     <div id="converters" class="tab-content active">
         <div class="converter">
             <h2>📊 Ciśnienie</h2>
-            <input type="number" id="barInput" placeholder="Wartość w Bar" oninput="convertPressure()">
+            <input type="tel" inputmode="decimal" id="barInput" placeholder="Wartość w Bar" oninput="convertPressure()">
             <div class="result">= <span id="paResult">0</span> Pa</div>
             <div class="result">= <span id="psiResult">0</span> PSI</div>
             <div class="result">= <span id="mpaResult">0</span> MPa</div>
@@ -130,7 +131,7 @@
 
         <div class="converter">
             <h2>💨 Przepływ</h2>
-            <input type="number" id="flowInput" placeholder="Wartość" oninput="convertFlow()">
+            <input type="tel" inputmode="decimal" id="flowInput" placeholder="Wartość" oninput="convertFlow()">
             <select id="flowUnit" onchange="convertFlow()">
                 <option value="m3h">m³/h</option>
                 <option value="lmin">l/min</option>
@@ -165,12 +166,12 @@
     <div id="tools" class="tab-content">
         <div class="converter">
             <h2>⚡ Dobór kabla</h2>
-            <input type="number" id="powerKW" placeholder="Moc [kW]">
+            <input type="tel" inputmode="decimal" id="powerKW" placeholder="Moc [kW]">
             <select id="voltage">
                 <option value="400">3x400V</option>
                 <option value="230">230V</option>
             </select>
-            <input type="number" id="cableLength" placeholder="Długość [m]">
+            <input type="tel" inputmode="decimal" id="cableLength" placeholder="Długość [m]">
             <button onclick="calculateCable()">OBLICZ</button>
             <div class="result" id="cableResult">-</div>
         </div>
