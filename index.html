@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <title>AutoTools</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 10px;
+        }
+        .header {
+            background: #0066cc;
+            padding: 15px;
+            margin: -10px -10px 20px -10px;
+            text-align: center;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 15px;
+            background: #333;
+            border: none;
+            color: white;
+            font-size: 16px;
+            flex: 1;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: #0066cc;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .converter {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            margin: 10px 0;
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 5px;
+        }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button.add {
+            background: #00aa00;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        button.delete {
+            background: #aa0000;
+        }
+        .result {
+            background: #0066cc;
+            padding: 20px;
+            margin: 10px 0;
+            font-size: 22px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .machine-card {
+            background: #333;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0066cc;
+        }
+        .machine-card h3 {
+            color: #00aa00;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            background: #555;
+            padding: 5px 10px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 AutoTools</h1>
+        <small>Narzędzia automatyka</small>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab-btn active" onclick="switchTab('converters')">Przeliczniki</button>
+        <button class="tab-btn" onclick="switchTab('machines')">Maszyny</button>
+        <button class="tab-btn" onclick="switchTab('tools')">Narzędzia</button>
+    </div>
+
+    <!-- PRZELICZNIKI -->
+    <div id="converters" class="tab-content active">
+        <div class="converter">
+            <h2>📊 Ciśnienie</h2>
+            <input type="number" id="barInput" placeholder="Wartość w Bar" oninput="convertPressure()">
+            <div class="result">= <span id="paResult">0</span> Pa</div>
+            <div class="result">= <span id="psiResult">0</span> PSI</div>
+            <div class="result">= <span id="mpaResult">0</span> MPa</div>
+        </div>
+
+        <div class="converter">
+            <h2>💨 Przepływ</h2>
+            <input type="number" id="flowInput" placeholder="Wartość" oninput="convertFlow()">
+            <select id="flowUnit" onchange="convertFlow()">
+                <option value="m3h">m³/h</option>
+                <option value="lmin">l/min</option>
+                <option value="cfm">CFM</option>
+            </select>
+            <div class="result">= <span id="m3hResult">0</span> m³/h</div>
+            <div class="result">= <span id="lminResult">0</span> l/min</div>
+            <div class="result">= <span id="cfmResult">0</span> CFM</div>
+        </div>
+    </div>
+
+    <!-- MASZYNY -->
+    <div id="machines" class="tab-content">
+        <button class="add" onclick="showAddMachine()">+ DODAJ MASZYNĘ</button>
+        
+        <div id="addMachineForm" style="display:none;" class="converter">
+            <h3>Nowa maszyna</h3>
+            <input type="text" id="machName" placeholder="Nazwa maszyny">
+            <input type="text" id="machIP" placeholder="Adres IP">
+            <input type="text" id="machPLC" placeholder="Typ PLC">
+            <input type="text" id="machLocation" placeholder="Lokalizacja">
+            <textarea id="machNotes" placeholder="Notatki..." rows="3"></textarea>
+            <button onclick="saveMachine()">ZAPISZ</button>
+            <button class="delete" onclick="hideAddMachine()">ANULUJ</button>
+        </div>
+
+        <input type="text" id="searchMachine" placeholder="🔍 Szukaj..." oninput="searchMachines()">
+        <div id="machineList"></div>
+    </div>
+
+    <!-- NARZĘDZIA -->
+    <div id="tools" class="tab-content">
+        <div class="converter">
+            <h2>⚡ Dobór kabla</h2>
+            <input type="number" id="powerKW" placeholder="Moc [kW]">
+            <select id="voltage">
+                <option value="400">3x400V</option>
+                <option value="230">230V</option>
+            </select>
+            <input type="number" id="cableLength" placeholder="Długość [m]">
+            <button onclick="calculateCable()">OBLICZ</button>
+            <div class="result" id="cableResult">-</div>
+        </div>
+
+        <div class="converter">
+            <h2>📐 Przekroje</h2>
+            <select id="cableType" onchange="showCableInfo()">
+                <option value="">Wybierz...</option>
+                <option value="1.5">1.5 mm²</option>
+                <option value="2.5">2.5 mm²</option>
+                <option value="4">4 mm²</option>
+                <option value="6">6 mm²</option>
+                <option value="10">10 mm²</option>
+                <option value="16">16 mm²</option>
+            </select>
+            <div id="cableInfo" class="result">-</div>
+        </div>
+
+        <div class="converter">
+            <h2>💾 Backup danych</h2>
+            <button onclick="backupData()">EKSPORTUJ DANE</button>
+            <button onclick="document.getElementById('importFile').click()">IMPORTUJ DANE</button>
+            <input type="file" id="importFile" style="display:none;" onchange="importData(this.files[0])">
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

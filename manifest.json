@@ -1,0 +1,17 @@
+{
+    "name": "AutoTools",
+    "short_name": "AutoTools",
+    "description": "Narzędzia automatyka",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#0066cc",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+}
