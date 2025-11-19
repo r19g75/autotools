@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
     <title>AutoTools</title>
     <style>
@@ -10,12 +10,14 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             font-family: Arial, sans-serif;
             background: #1a1a1a;
             color: white;
             padding: 10px;
+            -webkit-font-smoothing: antialiased;
         }
         .header {
             background: #0066cc;
@@ -36,6 +38,7 @@
             font-size: 16px;
             flex: 1;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
         .tab-btn.active {
             background: #0066cc;
@@ -62,6 +65,12 @@
             color: white;
             border-radius: 5px;
             -webkit-appearance: none;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        input:focus {
+            outline: 2px solid #0066cc;
+            border-color: #0066cc;
         }
         button {
             background: #0066cc;
@@ -71,10 +80,16 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        button.calculate {
+            background: #ff6600;
+            font-weight: bold;
+            font-size: 18px;
         }
         button.add {
             background: #00aa00;
-            width: 100%;
             margin-bottom: 20px;
         }
         button.delete {
@@ -87,6 +102,10 @@
             font-size: 22px;
             text-align: center;
             border-radius: 5px;
+        }
+        .result.empty {
+            background: #444;
+            color: #888;
         }
         .machine-card {
             background: #333;
@@ -104,6 +123,15 @@
             padding: 5px 10px;
             margin-left: 10px;
             font-size: 14px;
+            width: auto;
+        }
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .button-row button {
+            flex: 1;
         }
     </style>
 </head>
@@ -123,23 +151,25 @@
     <div id="converters" class="tab-content active">
         <div class="converter">
             <h2>📊 Ciśnienie</h2>
-            <input type="tel" inputmode="decimal" id="barInput" placeholder="Wartość w Bar" oninput="convertPressure()">
-            <div class="result">= <span id="paResult">0</span> Pa</div>
-            <div class="result">= <span id="psiResult">0</span> PSI</div>
-            <div class="result">= <span id="mpaResult">0</span> MPa</div>
+            <input type="text" inputmode="decimal" id="barInput" placeholder="Wartość w Bar">
+            <button class="calculate" onclick="convertPressure()">PRZELICZ</button>
+            <div class="result empty" id="paDiv">Pa: <span id="paResult">-</span></div>
+            <div class="result empty" id="psiDiv">PSI: <span id="psiResult">-</span></div>
+            <div class="result empty" id="mpaDiv">MPa: <span id="mpaResult">-</span></div>
         </div>
 
         <div class="converter">
             <h2>💨 Przepływ</h2>
-            <input type="tel" inputmode="decimal" id="flowInput" placeholder="Wartość" oninput="convertFlow()">
-            <select id="flowUnit" onchange="convertFlow()">
+            <input type="text" inputmode="decimal" id="flowInput" placeholder="Wartość">
+            <select id="flowUnit">
                 <option value="m3h">m³/h</option>
                 <option value="lmin">l/min</option>
                 <option value="cfm">CFM</option>
             </select>
-            <div class="result">= <span id="m3hResult">0</span> m³/h</div>
-            <div class="result">= <span id="lminResult">0</span> l/min</div>
-            <div class="result">= <span id="cfmResult">0</span> CFM</div>
+            <button class="calculate" onclick="convertFlow()">PRZELICZ</button>
+            <div class="result empty" id="m3hDiv">m³/h: <span id="m3hResult">-</span></div>
+            <div class="result empty" id="lminDiv">l/min: <span id="lminResult">-</span></div>
+            <div class="result empty" id="cfmDiv">CFM: <span id="cfmResult">-</span></div>
         </div>
     </div>
 
@@ -154,8 +184,10 @@
             <input type="text" id="machPLC" placeholder="Typ PLC">
             <input type="text" id="machLocation" placeholder="Lokalizacja">
             <textarea id="machNotes" placeholder="Notatki..." rows="3"></textarea>
-            <button onclick="saveMachine()">ZAPISZ</button>
-            <button class="delete" onclick="hideAddMachine()">ANULUJ</button>
+            <div class="button-row">
+                <button onclick="saveMachine()">ZAPISZ</button>
+                <button class="delete" onclick="hideAddMachine()">ANULUJ</button>
+            </div>
         </div>
 
         <input type="text" id="searchMachine" placeholder="🔍 Szukaj..." oninput="searchMachines()">
@@ -166,14 +198,14 @@
     <div id="tools" class="tab-content">
         <div class="converter">
             <h2>⚡ Dobór kabla</h2>
-            <input type="tel" inputmode="decimal" id="powerKW" placeholder="Moc [kW]">
+            <input type="text" inputmode="decimal" id="powerKW" placeholder="Moc [kW]">
             <select id="voltage">
                 <option value="400">3x400V</option>
                 <option value="230">230V</option>
             </select>
-            <input type="tel" inputmode="decimal" id="cableLength" placeholder="Długość [m]">
-            <button onclick="calculateCable()">OBLICZ</button>
-            <div class="result" id="cableResult">-</div>
+            <input type="text" inputmode="decimal" id="cableLength" placeholder="Długość [m]">
+            <button class="calculate" onclick="calculateCable()">OBLICZ</button>
+            <div class="result empty" id="cableResult">-</div>
         </div>
 
         <div class="converter">
@@ -187,7 +219,7 @@
                 <option value="10">10 mm²</option>
                 <option value="16">16 mm²</option>
             </select>
-            <div id="cableInfo" class="result">-</div>
+            <div class="result empty" id="cableInfo">-</div>
         </div>
 
         <div class="converter">
