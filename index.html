@@ -6,133 +6,27 @@
     <link rel="manifest" href="manifest.json">
     <title>AutoTools</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: #1a1a1a;
-            color: white;
-            padding: 10px;
-            -webkit-font-smoothing: antialiased;
-        }
-        .header {
-            background: #0066cc;
-            padding: 15px;
-            margin: -10px -10px 20px -10px;
-            text-align: center;
-        }
-        .tab-buttons {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            padding: 15px;
-            background: #333;
-            border: none;
-            color: white;
-            font-size: 16px;
-            flex: 1;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .tab-btn.active {
-            background: #0066cc;
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .converter {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            margin: 10px 0;
-            background: #333;
-            border: 1px solid #555;
-            color: white;
-            border-radius: 5px;
-            -webkit-appearance: none;
-            -webkit-user-select: text;
-            user-select: text;
-        }
-        input:focus {
-            outline: 2px solid #0066cc;
-            border-color: #0066cc;
-        }
-        button {
-            background: #0066cc;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            width: 100%;
-            margin: 5px 0;
-        }
-        button.calculate {
-            background: #ff6600;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        button.add {
-            background: #00aa00;
-            margin-bottom: 20px;
-        }
-        button.delete {
-            background: #aa0000;
-        }
-        .result {
-            background: #0066cc;
-            padding: 20px;
-            margin: 10px 0;
-            font-size: 22px;
-            text-align: center;
-            border-radius: 5px;
-        }
-        .result.empty {
-            background: #444;
-            color: #888;
-        }
-        .machine-card {
-            background: #333;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #0066cc;
-        }
-        .machine-card h3 {
-            color: #00aa00;
-            margin-bottom: 10px;
-        }
-        .copy-btn {
-            background: #555;
-            padding: 5px 10px;
-            margin-left: 10px;
-            font-size: 14px;
-            width: auto;
-        }
-        .button-row {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        .button-row button {
-            flex: 1;
-        }
+        *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+        body{font-family:Arial,sans-serif;background:#1a1a1a;color:#fff;padding:10px;-webkit-font-smoothing:antialiased}
+        .header{background:#0066cc;padding:15px;margin:-10px -10px 20px -10px;text-align:center}
+        .tab-buttons{display:flex;gap:5px;margin-bottom:20px}
+        .tab-btn{padding:15px;background:#333;border:none;color:#fff;font-size:16px;flex:1;cursor:pointer}
+        .tab-btn.active{background:#0066cc}
+        .tab-content{display:none}.tab-content.active{display:block}
+        .converter{background:#2a2a2a;padding:20px;border-radius:10px;margin-bottom:20px}
+        input,select,textarea{width:100%;padding:15px;font-size:18px;margin:10px 0;background:#333;border:1px solid #555;color:#fff;border-radius:5px;-webkit-appearance:none}
+        input:focus{outline:2px solid #0066cc;border-color:#0066cc}
+        button{background:#0066cc;color:#fff;border:none;padding:15px;font-size:16px;cursor:pointer;border-radius:5px;width:100%;margin:5px 0}
+        button.calculate{background:#ff6600;font-weight:bold;font-size:18px}
+        button.add{background:#00aa00;margin-bottom:20px}
+        button.delete{background:#aa0000}
+        .result{background:#0066cc;padding:20px;margin:10px 0;font-size:22px;text-align:center;border-radius:5px}
+        .result.empty{background:#444;color:#888}
+        .machine-card{background:#333;padding:15px;margin:10px 0;border-radius:5px;border-left:4px solid #0066cc}
+        .machine-card h3{color:#00aa00;margin-bottom:10px}
+        .copy-btn{background:#555;padding:5px 10px;margin-left:10px;font-size:14px;width:auto}
+        .button-row{display:flex;gap:10px;margin:10px 0}
+        .button-row button{flex:1}
     </style>
 </head>
 <body>
@@ -153,9 +47,9 @@
             <h2>📊 Ciśnienie</h2>
             <input type="text" inputmode="decimal" id="barInput" placeholder="Wartość w Bar">
             <button class="calculate" onclick="convertPressure()">PRZELICZ</button>
-            <div class="result empty" id="paDiv">Pa: <span id="paResult">-</span></div>
-            <div class="result empty" id="psiDiv">PSI: <span id="psiResult">-</span></div>
-            <div class="result empty" id="mpaDiv">MPa: <span id="mpaResult">-</span></div>
+            <div class="result empty">Pa: <span id="paResult">-</span></div>
+            <div class="result empty">PSI: <span id="psiResult">-</span></div>
+            <div class="result empty">MPa: <span id="mpaResult">-</span></div>
         </div>
 
         <div class="converter">
@@ -167,16 +61,15 @@
                 <option value="cfm">CFM</option>
             </select>
             <button class="calculate" onclick="convertFlow()">PRZELICZ</button>
-            <div class="result empty" id="m3hDiv">m³/h: <span id="m3hResult">-</span></div>
-            <div class="result empty" id="lminDiv">l/min: <span id="lminResult">-</span></div>
-            <div class="result empty" id="cfmDiv">CFM: <span id="cfmResult">-</span></div>
+            <div class="result empty">m³/h: <span id="m3hResult">-</span></div>
+            <div class="result empty">l/min: <span id="lminResult">-</span></div>
+            <div class="result empty">CFM: <span id="cfmResult">-</span></div>
         </div>
     </div>
 
     <!-- MASZYNY -->
     <div id="machines" class="tab-content">
         <button class="add" onclick="showAddMachine()">+ DODAJ MASZYNĘ</button>
-        
         <div id="addMachineForm" style="display:none;" class="converter">
             <h3>Nowa maszyna</h3>
             <input type="text" id="machName" placeholder="Nazwa maszyny">
@@ -189,7 +82,6 @@
                 <button class="delete" onclick="hideAddMachine()">ANULUJ</button>
             </div>
         </div>
-
         <input type="text" id="searchMachine" placeholder="🔍 Szukaj..." oninput="searchMachines()">
         <div id="machineList"></div>
     </div>
@@ -222,23 +114,20 @@
             <div class="result empty" id="cableInfo">-</div>
         </div>
 
-        
-                <!-- ========== NOWY KALKULATOR – POJEMNOŚĆ ZBIORNIKA ========== -->
+        <!-- ===== NOWY KALKULATOR – POJEMNOŚĆ ZBIORNIKA ===== -->
         <div class="converter">
             <h2>🛢️ Pojemność zbiornika</h2>
-        
             <select id="tankShape" onchange="toggleCone()">
                 <option value="cyl">Tylko cylindryczny</option>
                 <option value="cylcone">Cylinder + stożek (dno)</option>
             </select>
-        
-            <input type="text" inputmode="decimal" id="tankD"      placeholder="Średnica całkowita [cm]">
-            <input type="text" inputmode="decimal" id="tankH"      placeholder="Wysokość cylindra [cm]">
-            <input type="text" inputmode="decimal" id="coneH"      placeholder="Wysokość stożka [cm]" style="display:none;">
-        
+            <input type="text" inputmode="decimal" id="tankD" placeholder="Średnica całkowita [cm]">
+            <input type="text" inputmode="decimal" id="tankH" placeholder="Wysokość cylindra [cm]">
+            <input type="text" inputmode="decimal" id="coneH" placeholder="Wysokość stożka [cm]" style="display:none;">
             <button class="calculate" onclick="calcTank()">OBLICZ</button>
             <div class="result empty" id="tankResult">-</div>
         </div>
+
         <div class="converter">
             <h2>💾 Backup danych</h2>
             <button onclick="backupData()">EKSPORTUJ DANE</button>
@@ -250,5 +139,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
-
