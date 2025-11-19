@@ -116,23 +116,22 @@
 
         <!-- ===== NOWY KALKULATOR – POJEMNOŚĆ ZBIORNIKA ===== -->
         <!-- ===== NOWY KALKULATOR – POJEMNOŚĆ ZBIORNIKA ===== -->
-    <div class="converter">
-        <h2>🛢️ Pojemność zbiornika</h2>
-    
-        <select id="tankShape" onchange="toggleCone()">
-            <option value="cyl">Tylko cylindryczny</option>
-            <option value="cylcone">Cylinder + stożek (dno)</option>
-        </select>
-    
-        <input type="text" inputmode="decimal" id="tankD" placeholder="Średnica całkowita [cm]">
-        <input type="text" inputmode="decimal" id="tankH" placeholder="Wysokość cylindra [cm]">
-    
-        <!-- to pole ZAWSZY jest w DOM, ale pokażemy je DOPÓKI wybrano stożek -->
-        <input type="text" inputmode="decimal" id="coneH" placeholder="Wysokość stożka [cm]">
-    
-        <button class="calculate" onclick="calcTank()">OBLICZ</button>
-        <div class="result empty" id="tankResult">-</div>
-    </div>
+            <!-- ===== NOWY KALKULATOR – POJEMNOŚĆ ZBIORNIKA ===== -->
+        <div class="converter">
+            <h2>🛢️ Pojemność zbiornika</h2>
+
+            <select id="tankShape" onchange="toggleCone()">
+                <option value="cyl">Tylko cylindryczny</option>
+                <option value="cylcone">Cylinder + stożek (dno)</option>
+            </select>
+
+            <input type="text" inputmode="decimal" id="tankD" placeholder="Średnica całkowita [cm]">
+            <input type="text" inputmode="decimal" id="tankH" placeholder="Wysokość cylindra [cm]">
+            <input type="text" inputmode="decimal" id="coneH" placeholder="Wysokość stożka [cm]">
+
+            <button class="calculate" onclick="calcTank()">OBLICZ</button>
+            <div class="result empty" id="tankResult">-</div>
+        </div>
 
         <div class="converter">
             <h2>💾 Backup danych</h2>
@@ -145,4 +144,5 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
