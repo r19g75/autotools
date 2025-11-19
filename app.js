@@ -198,3 +198,38 @@ document.addEventListener('touchmove', e => {
     if (scrollT === 0 && touchY > lastTouchY + 5) e.preventDefault(); // tylko pull-down
     lastTouchY = touchY;
 }, {passive:false});
+// pokaż / ukryj pole stożka
+function toggleCone() {
+    const shape = document.getElementById('tankShape').value;
+    document.getElementById('coneH').style.display = (shape === 'cylcone') ? 'block' : 'none';
+}
+
+// główny licznik
+function calcTank() {
+    const D     = parseFloat(document.getElementById('tankD').value)  || 0;  // cm
+    const Hcyl  = parseFloat(document.getElementById('tankH').value)  || 0;  // cm
+    const Hcone = parseFloat(document.getElementById('coneH').value)  || 0;  // cm
+
+    if (D <= 0 || Hcyl <= 0) {
+        document.getElementById('tankResult').textContent = 'Podaj średnicę i wysokość';
+        return;
+    }
+
+    const R = D / 2;                       // promień cylindra [cm]
+    const Vcyl = Math.PI * R * R * Hcyl;   // objętość cylindra [cm³]
+
+    let Vcone = 0;
+    if (document.getElementById('tankShape').value === 'cylcone' && Hcone > 0) {
+        // stożek: mała średnica = 1 cal = 2,54 cm
+        const rSmall = 2.54 / 2;           // promień mały [cm]
+        Vcone = (1/3) * Math.PI * Hcone * (R*R + R*rSmall + rSmall*rSmall);  // stożek trapezowy
+    }
+
+    const Vtotal = Vcyl + Vcone;           // [cm³]
+    const litres = Vtotal / 1000;          // 1 l = 1000 cm³
+
+    document.getElementById('tankResult').innerHTML =
+        `Objętość: <b>${litres.toFixed(2)}</b> l<br>
+         Cylinder: ${(Vcyl/1000).toFixed(2)} l` +
+        (Vcone ? `<br>Stożek: ${(Vcone/1000).toFixed(2)} l` : '');
+}
