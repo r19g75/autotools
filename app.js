@@ -232,5 +232,28 @@ function calcTank() {
          Cylinder: ${(Vcyl/1000).toFixed(2)} l` +
         (Vcone ? `<br>Stożek: ${(Vcone/1000).toFixed(2)} l` : '');
 }
+// --------- PRAWO OHMA – SILNIK ---------
+function calcMotor() {
+    const P  = parseFloat(document.getElementById('motorPower').value) || 0;        // kW
+    const U  = parseFloat(document.getElementById('motorVoltage').value);           // V
+    const η  = parseFloat(document.getElementById('motorEff').value);               // sprawność
+    const pf = parseFloat(document.getElementById('motorPF').value);                // cos φ
+
+    if (P <= 0) { document.getElementById('motorResult').textContent = 'Podaj moc'; return; }
+
+    const P_el = P * 1000 / η;           // moc elektryczna [W]
+
+    const I = (U === 400) ?
+        P_el / (Math.sqrt(3) * U * pf) :   // 3-faz
+        P_el / (U * pf);                   // 1-faz
+
+    const stdAC3 = [6, 9, 12, 16, 25, 32, 40, 50, 63, 80, 100, 125, 160, 200, 250];
+    const pick   = stdAC3.find(x => x >= I) || stdAC3[stdAC3.length - 1];
+
+    document.getElementById('motorResult').innerHTML =
+        `Prąd silnika: <b>${I.toFixed(1)}</b> A<br>
+         Zalecany stycznik AC-3: <b>${pick} A</b>`;
+}
+
 
 
