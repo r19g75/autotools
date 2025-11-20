@@ -132,7 +132,33 @@
             <button class="calculate" onclick="calcTank()">OBLICZ</button>
             <div class="result empty" id="tankResult">-</div>
         </div>
+        <div class="converter">
+            <h2>💾 Backup danych</h2>
+                    <!-- ===== PRAWO OHMA – DOBÓR STYCZNIKA ===== -->
+        <div class="converter">
+            <h2>⚡ Silnik → prąd → stycznik</h2>
 
+            <input type="text" inputmode="decimal" id="motorPower" placeholder="Moc silnika [kW]">
+            <select id="motorVoltage">
+                <option value="400">3×400 V</option>
+                <option value="230">1×230 V</option>
+            </select>
+            <select id="motorEff">
+                <option value="0.75">Sprawność ≈ 75 %</option>
+                <option value="0.8">Sprawność ≈ 80 %</option>
+                <option value="0.85">Sprawność ≈ 85 %</option>
+                <option value="0.9">Sprawność ≈ 90 %</option>
+            </select>
+            <select id="motorPF">
+                <option value="0.8">cos φ ≈ 0,80</option>
+                <option value="0.85">cos φ ≈ 0,85</option>
+                <option value="0.88">cos φ ≈ 0,88</option>
+                <option value="0.9">cos φ ≈ 0,90</option>
+            </select>
+
+            <button class="calculate" onclick="calcMotor()">OBLICZ</button>
+            <div class="result empty" id="motorResult">-</div>
+        </div>
         <div class="converter">
             <h2>💾 Backup danych</h2>
             <button onclick="backupData()">EKSPORTUJ DANE</button>
